@@ -4,3 +4,4 @@ vendor/
 limb/logs/
 limb/test.json
 
+/nbproject/private/
