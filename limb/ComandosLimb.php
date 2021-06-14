@@ -51,26 +51,35 @@
         function __construct() {
             $this->log = Logger::getLogger('com.hotelpene.limbBot.ComandosLimb');
         }
-        
-        
+
+
         private function clasificacion($endpoint, $request, $grupoVO){
             $this->log->debug("Obteniedo clasificacion");
             $time = microtime(true);
-            
+
             $urlApi=$grupoVO->url_api;
-            
+
             $response_chat_typing = Response::create_typing_response($endpoint, $request->get_chat_id());
             $response_chat_typing->send();
-            
-            
+
+
             //Se obtiene la fase actual
             $jsonFaseActual = Utils::callApi($request, 'util/faseActualClasif', $urlApi);
             $faseActual = json_decode($jsonFaseActual);
-            
+
+	    //Se obtiene la fase siguiente
+	    $idFaseSiguiente = intval($faseActual->id);
+	    $idFaseSiguiente = $idFaseSiguiente +1;
+
+            $jsonFaseSiguiente = Utils::callApi($request, 'fases/'.$idFaseSiguiente, $urlApi);
+            $faseSiguiente = json_decode($jsonFaseSiguiente)[0];
+
+	    $this->log->debug("fase sigueinte numapostadores: ".intval($faseSiguiente->numapostadores));
+
             $text='*Clasificación de la últ. fase ('.$faseActual->titulo.'):*'.PHP_EOL.PHP_EOL;
-            
+
             $url='clasificacion/'.$faseActual->id;
-            
+
             //Se comprueba si es un chat privado, para obtener el token del usuario
             if($request->is_private_chat()){
                 $jsonTokenUser = Utils::callApi($request, 'tokenusuario/'.$request->get_chat_id().'?token='.TOKEN_API_BOT, $urlApi);
@@ -82,7 +91,7 @@
                     $url='clasificacion/'.$faseActual->id.'?token='.$tokenUsuario[0]['token'];
                 }
             }
-                        
+
 
             $json = Utils::callApi($request, $url, $urlApi);
             $obj = json_decode($json);
@@ -93,21 +102,22 @@
                 $response = Response::create_text_replymarkup_response($endpoint,  $request->get_chat_id(), $obj[0]->error->text, json_encode($object));
                 return $response;
             }
-            
-            
+
+
             $emoji_down= Utils::convert_emoji(0x2B06);
             $emoji_up= Utils::convert_emoji(0x2B07);
             $emoji_balon= Utils::convert_emoji(0x26BD);
             $emoji_dinero= Utils::convert_emoji(0x1F4B0);
             $emoji_yield= Utils::convert_emoji(0x1F4A5);
-	    $total_jugadores = count($obj);
-            
+	    $total_jugadores = intval($faseActual->numapostadores);
+	    $pasan = intval($faseSiguiente->numapostadores);
+
             $i=1;
             foreach($obj as $valor) {
                 $jugado = 0 + floatval($valor->jugado);
                 $ganado = 0 + floatval($valor->ganancia);
                 $yield = ($ganado/$jugado)*100;
-		$pasa = $this->getIconoPasa($i, $total_jugadores);
+		$pasa = $this->getIconoPasa($i, $total_jugadores, $pasan);
             	$text=$text.$pasa.'*'.$i.'.'.$valor->nombre.'*'.$emoji_dinero.number_format((float)$valor->ganancia,2).'€'.$emoji_yield.round($yield,2).'%'.$emoji_balon.$valor->num_partidos.PHP_EOL;
             	$i++;
             }
@@ -184,7 +194,7 @@
             return $response;
         }
 
-        private function getIconoPasa($posicion, $total_jugadores) {
+        private function getIconoPasa($posicion, $total_jugadores, $pasan) {
             // https://emojipedia.org
             $emoji_ok = Utils::convert_emoji(0x2705);
             $emoji_ko = Utils::convert_emoji(0x2B07);
@@ -196,18 +206,18 @@
             if ($posicion === 1) {
                 return $emoji_first;
             }
-            $pasan = 12;
+            /*$pasan = 12;
             switch ($total_jugadores) {
                 case 12: $pasan = 6; break;
                 case 6: $pasan = 2; break;
                 case 2: $pasan = 1; break;
-            }
+            }*/
             if ($posicion > $pasan) {
                 return $emoji_ko;
-            } 
+            }
             return $emoji_ok;
         }
-        
+
         private function prox_jornada($endpoint, $request,$grupoVO){
             $this->log->debug("Obteniedo Próxima jornada");
             $time = microtime(true);
