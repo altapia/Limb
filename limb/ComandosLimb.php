@@ -412,6 +412,9 @@
             $json = Utils::callApi($request, 'util/euros'.$url, $urlApi);
             $obj = json_decode($json);
             
+            $jsonEurIni = Utils::callApi($request, 'propiedades/euros_iniciales'.$url, $urlApi);
+            $eurIni = json_decode($jsonEurIni);
+
             if(is_array($obj) && property_exists($obj[0],'error')){
                 $object = new stdClass();
                 $object->hide_keyboard =true;
@@ -422,6 +425,7 @@
             $ganado = 0 + floatval($obj->ganancia);
             $numSanciones = 0 + floatval($obj->num_sanciones);
             $importeSanciones = 0 + floatval($obj->importe_sanciones);
+            $eurosIniciales = 0 + floatval($eurIni->valor);
 
             if($jugado==0){
                 $yield=0;
@@ -434,6 +438,9 @@
 
             $text.='Nº Apuestas Sancionadas: '.$numSanciones.PHP_EOL;
             $text.='Ganado por Sanciones: '.round($importeSanciones,2).'€'.PHP_EOL.PHP_EOL;
+
+            $text.='Euros Iniciales: '.round($eurosIniciales,2).'€'.PHP_EOL;
+            $text.='Total Ganado: '.(round($eurosIniciales,2) - round($ganado,2)).'€'.PHP_EOL;
 
             $object = new stdClass();
             $object->hide_keyboard =true;
