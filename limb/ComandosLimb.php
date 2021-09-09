@@ -425,7 +425,7 @@
             $ganado = 0 + floatval($obj->ganancia);
             $numSanciones = 0 + floatval($obj->num_sanciones);
             $importeSanciones = 0 + floatval($obj->importe_sanciones);
-            $eurosIniciales = 0 + floatval($eurIni->valor);
+            $eurosIniciales = 0 + floatval($eurIni[0]->valor);
 
             if($jugado==0){
                 $yield=0;
