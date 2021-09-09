@@ -440,7 +440,7 @@
             $text.='Ganado por Sanciones: '.round($importeSanciones,2).'€'.PHP_EOL.PHP_EOL;
 
             $text.='Euros Iniciales: '.round($eurosIniciales,2).'€'.PHP_EOL;
-            $text.='Total Ganado: '.(round($eurosIniciales,2) - round($ganado,2)).'€'.PHP_EOL;
+            $text.='Total Ganado: '.(round($eurosIniciales,2) + round($ganado,2)).'€'.PHP_EOL;
 
             $object = new stdClass();
             $object->hide_keyboard =true;
