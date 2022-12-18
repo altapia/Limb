@@ -267,6 +267,12 @@
                 return Response::create_text_response($endpoint,  $request->get_chat_id(), $text);
             } 
             
+            
+            if($request->get_from_id() == ID_FILETE){
+                return Response::create_video_response($endpoint, $request->get_chat_id(), Resources::VID_MESSI_BOBO);
+            }
+
+            
             $index = rand(0,4);
 
             switch($index){
@@ -407,7 +413,7 @@
             
             if (rand(0,3) === 0) return $this->_funcion_pendiente($endpoint, $request);
             $file_id = Utils::aleatorio([
-                Resources::GIF_CULO_LUCHO_FILETE
+                Resources::GIF_NANO_LUCHO_CONECTA_NAZI
             ]);
             return Response::create_doc_response($endpoint, $request->get_chat_id(), $file_id);
         }
@@ -743,7 +749,8 @@
                 Resources::GIF_MASCARAS_BAILE_BODA,
                 Resources::GIF_BAILE_FIESTA,
                 Resources::GIF_PIPO_BAILA,
-                Resources::GIF_BAILE_SIN_CAMISETA
+                Resources::GIF_BAILE_SIN_CAMISETA,
+                Resources::GIF_CELEBRACION_TRACK_AND_FIELD
             ]);
             return Response::create_doc_response($endpoint, $request->get_chat_id(), $file_id);
         }
