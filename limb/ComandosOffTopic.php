@@ -267,12 +267,6 @@
                 return Response::create_text_response($endpoint,  $request->get_chat_id(), $text);
             } 
             
-            
-            if($request->get_from_id() == ID_FILETE){
-                return Response::create_video_response($endpoint, $request->get_chat_id(), Resources::VID_MESSI_BOBO);
-            }
-
-            
             $index = rand(0,4);
 
             switch($index){
