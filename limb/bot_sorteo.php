@@ -32,75 +32,33 @@ if(isset($_POST["texto"]) && isset($_POST["chat"]) && isset($_POST["token"])){
     
     if($token == $TOKEN){
         
-        if($aviso_admin==1){
+        if($aviso_admin == 1){
             
             $log->info('Enviando notificación a los administradores');
-                    
+
             $response = Response::create_text_response($endpoint, $chat, $texto);
             $resultado = $response->send();
             $result = json_decode($resultado, true);
             if($result["ok"]){
                 $log->info('Notificación enviada correctamente');
                 echo '{"error": false}';
-            }else{
+            } else {
                 $log->error('Error al enviar la respuesta. ErroCode: '.$result["error_code"] . '. description: '.$result["description"]);
                 echo '{"error":true, "desc":"'.$result["description"].'"}';
             }  
-        }else{
-            $log->debug("enviando gif");
-            $file_id = Utils::aleatorio([
-                Resources::GIF_SORTEO_CHAMPIONS, 
-                Resources::GIF_SORTEO_CHAMPIONS_UNA_BOLA, 
-                Resources::GIF_SORTEO_CHAMPIONS_CASILLAS, 
-                Resources::GIF_SORTEO_CHAMPIONS_TOTTI, 
-                Resources::GIF_SORTEO_CHAMPIONS_INFANTINO, 
-                Resources::GIF_SORTEO_CHAMPIONS_RCARLOS, 
-                Resources::GIF_SORTEO_CHAMPIONS_ZAMBROTTA    
-            ]);
-            
-            $response= Response::create_doc_response($endpoint, $chat, $file_id);
+        } else {
+            $response = Response::create_text_response($endpoint, $chat, $texto);
             $resultado = $response->send();
             $result = json_decode($resultado, true);
+            
             if($result["ok"]){
-                //{"ok":true,
-                    //"result":{"message_id":1717,"from":{"id":138747506,"is_bot":true,"first_name":"limBot","username":"guslimb_bot"},"chat":{"id":4082840,"first_name":"Antonio","username":"sgtoleos","type":"private"},"date":1508086073,"text":"prueba sorteo"}}
-                $msg_id=$result["result"]["message_id"];
-                
-                sleep(3);
-                
-                $responseDel = Response::create_delete_response($endpoint, $chat, $msg_id);
-                $resultadoDel = $responseDel->send();
-                $resultDel = json_decode($resultadoDel, true);
-                
-                if($resultDel["ok"]){
-                    $log->info('Respuesta borrado enviada correctamente');
-                    
-                    $response = Response::create_text_response($endpoint, $chat, $texto);
-                    $resultado = $response->send();
-                    $result = json_decode($resultado, true);
-                    
-                    if($result["ok"]){
-                        $log->info('Respuesta sorteo enviada correctamente');
-                        echo '{"error": false}';
-                    }else{
-                        $log->error('Borrado: Error al enviar la respuesta. ErroCode: '.$result["error_code"] . '. description: '.$result["description"]);
-                        echo '{"error":true, "desc":"'.$result["description"].'"}';
-                    }
-                    
-                }else{
-                    $log->error('Borrado: Error al enviar la respuesta. ErroCode: '.$result["error_code"] . '. description: '.$result["description"]);
-                    echo '{"error":true, "desc":"'.$result["description"].'"}';
-                }
-                
+                $log->info('Respuesta sorteo enviada correctamente');
+                echo '{"error": false}';
             }else{
-                 $log->error('Error al enviar la respuesta. ErroCode: '.$result["error_code"] . '. description: '.$result["description"]);
-                 echo '{"error":true, "desc":"'.$result["description"].'"}';
+                $log->error('Borrado: Error al enviar la respuesta. ErroCode: '.$result["error_code"] . '. description: '.$result["description"]);
+                echo '{"error":true, "desc":"'.$result["description"].'"}';
             }
         }
-        
-        
-        
-        
         
         //echo '{"error": false}';
     }else{

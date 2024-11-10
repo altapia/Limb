@@ -67,14 +67,14 @@
             $jsonFaseActual = Utils::callApi($request, 'util/faseActualClasif', $urlApi);
             $faseActual = json_decode($jsonFaseActual);
 
-	    //Se obtiene la fase siguiente
-	    $idFaseSiguiente = intval($faseActual->id);
-	    $idFaseSiguiente = $idFaseSiguiente +1;
+            //Se obtiene la fase siguiente
+            $idFaseSiguiente = intval($faseActual->id);
+            $idFaseSiguiente = $idFaseSiguiente +1;
 
             $jsonFaseSiguiente = Utils::callApi($request, 'fases/'.$idFaseSiguiente, $urlApi);
             $faseSiguiente = json_decode($jsonFaseSiguiente)[0];
 
-	    $this->log->debug("fase sigueinte numapostadores: ".intval($faseSiguiente->numapostadores));
+	        $this->log->debug("fase sigueinte numapostadores: ".intval($faseSiguiente->numapostadores));
 
             $text='*Clasificación de la últ. fase ('.$faseActual->titulo.'):*'.PHP_EOL.PHP_EOL;
 
@@ -109,15 +109,15 @@
             $emoji_balon= Utils::convert_emoji(0x26BD);
             $emoji_dinero= Utils::convert_emoji(0x1F4B0);
             $emoji_yield= Utils::convert_emoji(0x1F4A5);
-	    $total_jugadores = intval($faseActual->numapostadores);
-	    $pasan = intval($faseSiguiente->numapostadores);
+	        $total_jugadores = intval($faseActual->numapostadores);
+	        $pasan = intval($faseSiguiente->numapostadores);
 
             $i=1;
             foreach($obj as $valor) {
                 $jugado = 0 + floatval($valor->jugado);
                 $ganado = 0 + floatval($valor->ganancia);
                 $yield = ($ganado/$jugado)*100;
-		$pasa = $this->getIconoPasa($i, $total_jugadores, $pasan);
+		        $pasa = $this->getIconoPasa($i, $total_jugadores, $pasan);
             	$text=$text.$pasa.'*'.$i.'.'.$valor->nombre.'*'.$emoji_dinero.number_format((float)$valor->ganancia,2).'€'.$emoji_yield.round($yield,2).'%'.$emoji_balon.$valor->num_partidos.PHP_EOL;
             	$i++;
             }
@@ -182,7 +182,7 @@
                 $jugado = 0 + floatval($valor->jugado);
                 $ganado = 0 + floatval($valor->ganancia);
                 $yield = ($ganado/$jugado)*100;
-		$text=$text.'*'.$i.'.'.$valor->nombre.'*'.$emoji_dinero.number_format((float)$valor->ganancia,2).'€'.$emoji_yield.round($yield,2).'%'.$emoji_balon.$valor->num_partidos.PHP_EOL;
+		        $text=$text.'*'.$i.'.'.$valor->nombre.'*'.$emoji_dinero.number_format((float)$valor->ganancia,2).'€'.$emoji_yield.round($yield,2).'%'.$emoji_balon.$valor->num_partidos.PHP_EOL;
                 $i++;
             }
             
@@ -228,10 +228,10 @@
             $response->send();
 
             //Se obtiene la fecha del proximo partido
-	    $jsonFaseAct = Utils::callApi($request,'util/faseActual', $urlApi);
-	    $faseAct = json_decode($jsonFaseAct);
-	    $fase = $faseAct->id;
-	    $tipoFase = $faseAct->tipo->id;
+            $jsonFaseAct = Utils::callApi($request,'util/faseActual', $urlApi);
+            $faseAct = json_decode($jsonFaseAct);
+            $fase = $faseAct->id;
+            $tipoFase = $faseAct->tipo->id;
 
             $json = Utils::callApi($request, 'partidos/fase/'.$fase.'/'.$tipoFase, $urlApi);
             $obj = json_decode($json);
