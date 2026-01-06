@@ -400,32 +400,59 @@
             $url='';
              //Se comprueba si es un chat privado, para obtener el token del usuario
             if($request->is_private_chat()){
+                $this->log->debug("Es chat privado, obteniendo token");
                 $jsonTokenUser = Utils::callApi($request, 'tokenusuario/'.$request->get_chat_id().'?token='.TOKEN_API_BOT, $urlApi);
                 $tokenUsuario = json_decode($jsonTokenUser, true);
-                //var_dump($tokenUsuario);
+                $this->log->debug("Token usuario obtenido: " . print_r($tokenUsuario, true));
                 //Si hay token de usuario del chat, se invoca el comando con el token
-                if($tokenUsuario[0]['token']){
+                if(is_array($tokenUsuario) && isset($tokenUsuario[0]['token']) && $tokenUsuario[0]['token']){
                     $url='?token='.$tokenUsuario[0]['token'];
                 }
             }
         
+            $this->log->debug("Llamando a util/euros" . $url);
             $json = Utils::callApi($request, 'util/euros'.$url, $urlApi);
+            $this->log->debug("Respuesta util/euros: " . $json);
             $obj = json_decode($json);
             
-            $jsonEurIni = Utils::callApi($request, 'propiedades/euros_iniciales'.$url, $urlApi);
-            $eurIni = json_decode($jsonEurIni);
-
-            if(is_array($obj) && property_exists($obj[0],'error')){
+            if($obj === null){
+                $this->log->error("Error al decodificar JSON de util/euros");
                 $object = new stdClass();
-                $object->hide_keyboard =true;
-                $response = Response::create_text_replymarkup_response($endpoint,  $request->get_chat_id(), $obj[0]->error->text, json_encode($object));
+                $object->hide_keyboard = true;
+                $response = Response::create_text_replymarkup_response($endpoint, $request->get_chat_id(), 'Error al obtener los datos de euros', json_encode($object));
                 return $response;
             }
-            $jugado = 0 + floatval($obj->jugado);
-            $ganado = 0 + floatval($obj->ganancia);
-            $numSanciones = 0 + floatval($obj->num_sanciones);
-            $importeSanciones = 0 + floatval($obj->importe_sanciones);
-            $eurosIniciales = 0 + floatval($eurIni[0]->valor);
+            
+            $this->log->debug("Llamando a propiedades/euros_iniciales" . $url);
+            $jsonEurIni = Utils::callApi($request, 'propiedades/euros_iniciales'.$url, $urlApi);
+            $this->log->debug("Respuesta propiedades/euros_iniciales: " . $jsonEurIni);
+            $eurIni = json_decode($jsonEurIni, true);
+
+            if($eurIni === null){
+                $this->log->error("Error al decodificar JSON de propiedades/euros_iniciales");
+                $object = new stdClass();
+                $object->hide_keyboard = true;
+                $response = Response::create_text_replymarkup_response($endpoint, $request->get_chat_id(), 'Error al obtener los datos de euros iniciales', json_encode($object));
+                return $response;
+            }
+
+            // Verificar si hay error en la respuesta
+            if(is_object($obj) && property_exists($obj, 'error')){
+                $this->log->error("Error en respuesta API: " . $obj->error->text);
+                $object = new stdClass();
+                $object->hide_keyboard = true;
+                $response = Response::create_text_replymarkup_response($endpoint, $request->get_chat_id(), $obj->error->text, json_encode($object));
+                return $response;
+            }
+            
+            // Verificar propiedades antes de acceder
+            $jugado = property_exists($obj, 'jugado') ? floatval($obj->jugado) : 0;
+            $ganado = property_exists($obj, 'ganancia') ? floatval($obj->ganancia) : 0;
+            $numSanciones = property_exists($obj, 'num_sanciones') ? floatval($obj->num_sanciones) : 0;
+            $importeSanciones = property_exists($obj, 'importe_sanciones') ? floatval($obj->importe_sanciones) : 0;
+            $eurosIniciales = (is_array($eurIni) && isset($eurIni[0]['valor'])) ? floatval($eurIni[0]['valor']) : 0;
+
+            $this->log->debug("Datos calculados - Jugado: $jugado, Ganado: $ganado, EurosIniciales: $eurosIniciales");
 
             if($jugado==0){
                 $yield=0;
