@@ -469,15 +469,51 @@
         }
 
         static function callApi($request, $url, $urlApi){
+            $log = Logger::getLogger('com.hotelpene.limbBot.Utils');
+            
+            $fullUrl = $urlApi . $url;
+            $log->debug("callApi - Iniciando petición a: " . $fullUrl);
+            
             $curl = curl_init();
             
-            curl_setopt($curl, CURLOPT_URL,$urlApi. $url);
+            curl_setopt($curl, CURLOPT_URL, $fullUrl);
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-        
+            curl_setopt($curl, CURLOPT_TIMEOUT, 10); // Timeout de 10 segundos
+            curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 5); // Timeout de conexión de 5 segundos
+            curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true); // Seguir redirecciones
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false); // Para desarrollo, en producción debería ser true
+            
+            $timeStart = microtime(true);
             $result = curl_exec($curl);
-        
+            $timeEnd = microtime(true);
+            
+            $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+            $curlError = curl_error($curl);
+            $curlErrno = curl_errno($curl);
+            
             curl_close($curl);
-        
+            
+            $duration = round(($timeEnd - $timeStart) * 1000, 2); // Duración en milisegundos
+            
+            if ($curlErrno !== 0) {
+                $log->error("callApi - Error cURL [{$curlErrno}]: {$curlError} - URL: {$fullUrl}");
+                return false;
+            }
+            
+            if ($httpCode >= 400) {
+                $log->error("callApi - HTTP Error {$httpCode} - URL: {$fullUrl} - Duración: {$duration}ms");
+                $log->debug("callApi - Respuesta: " . substr($result, 0, 500));
+                return false;
+            }
+            
+            $log->debug("callApi - Petición exitosa - HTTP {$httpCode} - Duración: {$duration}ms - Tamaño respuesta: " . strlen($result) . " bytes");
+            
+            if (strlen($result) < 1000) {
+                $log->debug("callApi - Respuesta completa: " . $result);
+            } else {
+                $log->debug("callApi - Respuesta (primeros 500 chars): " . substr($result, 0, 500) . "...");
+            }
+            
             return $result;
         }
         
