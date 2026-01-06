@@ -401,7 +401,9 @@
              //Se comprueba si es un chat privado, para obtener el token del usuario
             if($request->is_private_chat()){
                 $this->log->debug("Es chat privado, obteniendo token");
+                $this->log->debug("Llamando a tokenusuario/".$request->get_chat_id()."?token=".TOKEN_API_BOT);
                 $jsonTokenUser = Utils::callApi($request, 'tokenusuario/'.$request->get_chat_id().'?token='.TOKEN_API_BOT, $urlApi);
+                $this->log->debug("Respuesta tokenusuario: " . $jsonTokenUser);
                 $tokenUsuario = json_decode($jsonTokenUser, true);
                 $this->log->debug("Token usuario obtenido: " . print_r($tokenUsuario, true));
                 //Si hay token de usuario del chat, se invoca el comando con el token
@@ -410,7 +412,7 @@
                 }
             }
         
-            $this->log->debug("Llamando a util/euros" . $url);
+            $this->log->debug("Llamando a util/euros: " . $url);
             $json = Utils::callApi($request, 'util/euros'.$url, $urlApi);
             $this->log->debug("Respuesta util/euros: " . $json);
             $obj = json_decode($json);
