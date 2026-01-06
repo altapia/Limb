@@ -36,6 +36,7 @@ WORKDIR /var/www/html
 # Configurar variables de entorno (valores por defecto)
 ENV TELEGRAM_BOT_TOKEN="" \
     TOKEN_API_BOT="" \
+    LOG_LEVEL="INFO" \
     DB_HOST="localhost" \
     DB_USER="limbBot" \
     DB_PASSWORD="anopeludo" \

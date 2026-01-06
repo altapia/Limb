@@ -17,7 +17,25 @@ require_once __DIR__ . '/dao/chatDAO.php';
 require_once __DIR__ . '/dao/grupoDAO.php';
 require_once __DIR__ . '/ApostarCMD.php';
 
-Logger::configure(__DIR__ .'/../config.xml');
+// Configurar Logger con nivel desde variable de entorno
+$logConfig = array(
+    'appenders' => array(
+        'console' => array(
+            'class' => 'LoggerAppenderConsole'
+        )
+    ),
+    'loggers' => array(
+        'com.hotelpene.limbBot' => array(
+            'level' => LOG_LEVEL,
+            'appenders' => array('console')
+        )
+    ),
+    'rootLogger' => array(
+        'level' => 'ERROR',
+        'appenders' => array('console')
+    )
+);
+Logger::configure($logConfig);
 $log = Logger::getLogger('com.hotelpene.limbBot.bot');
 
 $log->debug("Comienza la ejecución");

@@ -32,6 +32,9 @@
     // Configuración de API y Base de Datos
     define('TOKEN_API_BOT', getenv('TOKEN_API_BOT') );
 
+    // Configuración de Logger (DEBUG, INFO, WARN, ERROR)
+    define('LOG_LEVEL', getenv('LOG_LEVEL') ?: 'DEBUG');
+
     define('BD_USER', getenv('DB_USER') );
     define('BD_PASSWORD', getenv('DB_PASSWORD') );
     define('BD_NAME', getenv('DB_NAME') );

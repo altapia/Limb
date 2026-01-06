@@ -469,19 +469,52 @@
         }
 
         static function callApi($request, $url, $urlApi){
-            $log = Logger::getLogger('com.hotelpene.limbBot.Utils');
-            
+            $isDebug = (LOG_LEVEL === 'DEBUG');
             $fullUrl = $urlApi . $url;
+            
+            // Versión optimizada para producción (sin debug)
+            if (!$isDebug) {
+                $curl = curl_init();
+                curl_setopt($curl, CURLOPT_URL, $fullUrl);
+                curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+                curl_setopt($curl, CURLOPT_TIMEOUT, 10);
+                curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 5);
+                curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+                curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+                
+                $result = curl_exec($curl);
+                $curlErrno = curl_errno($curl);
+                
+                if ($curlErrno !== 0) {
+                    $log = Logger::getLogger('com.hotelpene.limbBot.Utils');
+                    $log->error("callApi - Error cURL [{$curlErrno}]: " . curl_error($curl) . " - URL: {$fullUrl}");
+                    curl_close($curl);
+                    return false;
+                }
+                
+                $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+                curl_close($curl);
+                
+                if ($httpCode >= 400) {
+                    $log = Logger::getLogger('com.hotelpene.limbBot.Utils');
+                    $log->error("callApi - HTTP Error {$httpCode} - URL: {$fullUrl}");
+                    return false;
+                }
+                
+                return $result;
+            }
+            
+            // Versión completa con debug (desarrollo)
+            $log = Logger::getLogger('com.hotelpene.limbBot.Utils');
             $log->debug("callApi - Iniciando petición a: " . $fullUrl);
             
             $curl = curl_init();
-            
             curl_setopt($curl, CURLOPT_URL, $fullUrl);
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($curl, CURLOPT_TIMEOUT, 10); // Timeout de 10 segundos
-            curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 5); // Timeout de conexión de 5 segundos
-            curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true); // Seguir redirecciones
-            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false); // Para desarrollo, en producción debería ser true
+            curl_setopt($curl, CURLOPT_TIMEOUT, 10);
+            curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 5);
+            curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
             
             $timeStart = microtime(true);
             $result = curl_exec($curl);
@@ -493,7 +526,7 @@
             
             curl_close($curl);
             
-            $duration = round(($timeEnd - $timeStart) * 1000, 2); // Duración en milisegundos
+            $duration = round(($timeEnd - $timeStart) * 1000, 2);
             
             if ($curlErrno !== 0) {
                 $log->error("callApi - Error cURL [{$curlErrno}]: {$curlError} - URL: {$fullUrl}");
