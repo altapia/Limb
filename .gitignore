@@ -3,5 +3,3 @@ composer.phar
 vendor/
 limb/logs/
 limb/test.json
-limb/properties.php
-config.xml

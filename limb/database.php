@@ -9,13 +9,14 @@
     	private $_username = BD_USER;
     	private $_password = BD_PASSWORD;
     	private $_database = BD_NAME;
+    	private $_host = BD_HOST;
     	
     	
     
     	private function __construct() {
             $this->log = Logger::getLogger('com.hotelpene.limbBot.Database');
     		try {
-    		    $this->_connection =  new PDO('mysql:host=localhost;dbname='.$this->_database, $this->_username, $this->_password,  array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES \'UTF8\''));
+    		    $this->_connection =  new PDO('mysql:host='.$this->_host.';dbname='.$this->_database, $this->_username, $this->_password,  array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES \'UTF8\''));
     		    $this->_connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     		} catch(PDOException $e) {
                 $this->log->error('Error al establecer la coneción a BD'. $e->getTraceAsString());

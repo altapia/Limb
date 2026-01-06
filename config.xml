@@ -1,0 +1,14 @@
+<configuration xmlns="http://logging.apache.org/log4php/">
+
+    <appender name="console" class="LoggerAppenderConsole" />
+
+    <logger name="com.hotelpene.limbBot">
+        <level value="debug" />
+        <appender_ref ref="console" />
+    </logger>
+
+    <root>
+        <level value="ERROR" />
+        <appender_ref ref="console" />
+    </root>
+</configuration>
