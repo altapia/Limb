@@ -6,7 +6,7 @@
     // Obtener valores desde variables de entorno
     $TOKEN = getenv('TELEGRAM_BOT_TOKEN') ;
 
-    $VENDOR_AUTOLOAD_PATH = __DIR__ . '/../vendor/autoload.php';
+    $VENDOR_AUTOLOAD_PATH = '/../vendor/autoload.php';
 
     // CONSTANTES por WEB - IDs de usuarios
     define('ID_AGE', getenv('ID_AGE') );
