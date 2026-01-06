@@ -401,7 +401,7 @@
              //Se comprueba si es un chat privado, para obtener el token del usuario
             if($request->is_private_chat()){
                 $this->log->debug("Es chat privado, obteniendo token");
-                $this->log->debug("Llamando a tokenusuario/".$request->get_chat_id()."?token=".TOKEN_API_BOT);
+                $this->log->debug("Llamando a : ".$urlApi."tokenusuario/".$request->get_chat_id()."?token=".TOKEN_API_BOT);
                 $jsonTokenUser = Utils::callApi($request, 'tokenusuario/'.$request->get_chat_id().'?token='.TOKEN_API_BOT, $urlApi);
                 $this->log->debug("Respuesta tokenusuario: " . $jsonTokenUser);
                 $tokenUsuario = json_decode($jsonTokenUser, true);
