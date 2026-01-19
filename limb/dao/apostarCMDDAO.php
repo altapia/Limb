@@ -67,6 +67,7 @@
         
         public function update($cmd){
             $this->log->debug("Actualizando apostar cmd, chatid: ".$cmd->chat_id);
+            $this->log->debug("Cmd a actualizar: " . print_r($cmd, true));
             //var_dump($cmd);
             $db = Database::getInstance();
             $dbCon = $db->getConnection();
