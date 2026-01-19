@@ -47,9 +47,9 @@
                 }
                 
                 if( $cmd->importe!=null){
-                    $consulta->bindValue(':importe', $cmd->importe, PDO::PARAM_INT);
+                    $consulta->bindValue(':importe', $cmd->importe, PDO::PARAM_STR);
                 }else{
-                    $consulta->bindValue(':importe', null, PDO::PARAM_INT);
+                    $consulta->bindValue(':importe', null, PDO::PARAM_STR);
                 }
                 
                 if( $cmd->partido!=null){
