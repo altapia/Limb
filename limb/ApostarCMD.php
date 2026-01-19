@@ -108,6 +108,7 @@
         
         
         private function crearApuesta($endpoint, $request, $currentCMD){
+            $this->log->debug("ApostarCMD - crearApuesta");
             $grupo=$currentCMD['grupo'];
             $grupoDAO = new GrupoDAO();
             $grupoVO=$grupoDAO->select($currentCMD['grupo']);
@@ -129,8 +130,9 @@
                     "importe"=>$cmd['importe'],
                     "desc"=>$cmd['descrip']
                         );
-                $data_string = json_encode($data);                                                                                   
+                $data_string = json_encode($data);
                 
+                $this->log->debug("ApostarCMD - crearApuesta - data: " . $data_string);
                 
                 //Esto se podría meter en el utils
                 $curl = curl_init();
@@ -144,6 +146,7 @@
                 );
                                                                                                                                      
                 $result = curl_exec($curl);
+                $this->log->debug("ApostarCMD - crearApuesta - result: " . $result);
                 $apuesta = json_decode($result);
                 
                 if(isset($apuesta->error)){
