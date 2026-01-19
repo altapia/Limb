@@ -19,6 +19,8 @@
                 $stmt   = $dbCon->query($sql_query);
                 $currentCMD  = $stmt->fetch();
                 $dbCon = null;
+
+                $this->log->debug("Select apostar result: ".print_r($currentCMD, true));
              
                 return $currentCMD;
             }catch(PDOException $e) {
