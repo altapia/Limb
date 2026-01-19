@@ -51,13 +51,12 @@
                 //Llamar api apostar
                 $result = $this->crearApuesta($endpoint, $request, $currentCMD);
                 
+                //Se borra el comando actual
+                $currentCMDDAO = new CurrentCMDDAO();
+                $currentCMD = $currentCMDDAO->delete($request->get_chat_id());
+    
                 if($result==null){
                     $text='Apuesta creada correctamente.'.PHP_EOL.'Puedes verla con el comando /mispartidos';
-
-                    //Se borra el comando actual
-                    $currentCMDDAO = new CurrentCMDDAO();
-                    $currentCMD = $currentCMDDAO->delete($request->get_chat_id());
-        
                     return Response::create_text_response($endpoint,  $request->get_chat_id(), $text);
                 }
                 $emoji_alert=Utils::convert_emoji(0x26A0);
