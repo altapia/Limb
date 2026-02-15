@@ -78,7 +78,15 @@
 
             $text='*Clasificación de la últ. fase ('.$faseActual->titulo.'):*'.PHP_EOL.PHP_EOL;
 
-            $url='clasificacion/'.$faseActual->id;
+            /**FIXME esto es un parche por el playoff */
+            /*FIXME - Si la fase es la 1, la url est clasificacion/1/2
+                Esto se obtiene de la tabla CLASIFICACION_FASE.
+            */
+            if(intval($faseActual->id)==1){
+                $url='clasificacion/'.$faseActual->id.'/2';
+            }else{
+                $url='clasificacion/'.$faseActual->id;
+            }
 
             //Se comprueba si es un chat privado, para obtener el token del usuario
             if($request->is_private_chat()){
@@ -87,8 +95,15 @@
                 //var_dump($tokenUsuario);
                 //Si hay token de usuario del chat, se invoca el comando con el token
                // $objeto = $tokenUsuario[0];
+
+               /**FIXME esto es un parche por el playoff */
                 if($tokenUsuario[0]['token']){
-                    $url='clasificacion/'.$faseActual->id.'?token='.$tokenUsuario[0]['token'];
+                    if(intval($faseActual->id)==1){
+                        $url='clasificacion/'.$faseActual->id.'/2?token='.$tokenUsuario[0]['token'];
+                    }else{
+                        $url='clasificacion/'.$faseActual->id.'?token='.$tokenUsuario[0]['token'];
+                    }
+                   
                 }
             }
 
