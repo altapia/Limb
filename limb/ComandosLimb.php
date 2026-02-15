@@ -72,7 +72,7 @@
             $idFaseSiguiente = $idFaseSiguiente +1;
 
             $jsonFaseSiguiente = Utils::callApi($request, 'fases/'.$idFaseSiguiente, $urlApi);
-            $faseSiguiente = json_decode($jsonFaseSiguiente)[0];
+            $faseSiguiente = json_decode($jsonFaseSiguiente);
 
 	        $this->log->debug("fase sigueinte numapostadores: ".intval($faseSiguiente->numapostadores));
 

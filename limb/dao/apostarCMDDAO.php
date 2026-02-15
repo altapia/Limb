@@ -19,6 +19,8 @@
                 $stmt   = $dbCon->query($sql_query);
                 $currentCMD  = $stmt->fetch();
                 $dbCon = null;
+
+                $this->log->debug("Select apostar result: ".print_r($currentCMD, true));
              
                 return $currentCMD;
             }catch(PDOException $e) {
@@ -45,9 +47,9 @@
                 }
                 
                 if( $cmd->importe!=null){
-                    $consulta->bindValue(':importe', $cmd->importe, PDO::PARAM_INT);
+                    $consulta->bindValue(':importe', $cmd->importe, PDO::PARAM_STR);
                 }else{
-                    $consulta->bindValue(':importe', null, PDO::PARAM_INT);
+                    $consulta->bindValue(':importe', null, PDO::PARAM_STR);
                 }
                 
                 if( $cmd->partido!=null){
@@ -67,6 +69,7 @@
         
         public function update($cmd){
             $this->log->debug("Actualizando apostar cmd, chatid: ".$cmd->chat_id);
+            $this->log->debug("Cmd a actualizar: " . print_r($cmd, true));
             //var_dump($cmd);
             $db = Database::getInstance();
             $dbCon = $db->getConnection();
@@ -81,9 +84,9 @@
             }
             
             if( $cmd->importe!=null){
-                $consulta->bindValue(':importe', $cmd->importe, PDO::PARAM_INT);
+                $consulta->bindValue(':importe', $cmd->importe, PDO::PARAM_STR);
             }else{
-                $consulta->bindValue(':importe', null, PDO::PARAM_INT);
+                $consulta->bindValue(':importe', null, PDO::PARAM_STR);
             }
             
             if( $cmd->partido!=null){

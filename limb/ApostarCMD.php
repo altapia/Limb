@@ -33,9 +33,12 @@
                 $this->log->debug("Ya hay partido y descrip, pero no hay importe");
                 
                 $importe=$request->get_text();
+                $this->log->debug("Importe recibido: ".$importe);
                 $importe=str_replace(',','.',$importe);
+                $this->log->debug("Importe recibido (formateado): ".$importe);
             
                 if(is_numeric($importe)){
+                    $this->log->debug("Importe es un número. Update importe");
                     $this->updateImporte($endpoint, $request, $resultApostarCMD);
                 }else{
                     $this->log->debug("Error, no es un número");
@@ -95,7 +98,9 @@
         private function updateImporte($endpoint, $request, $resultApostarCMD){
             $this->log->debug("update importe");
             $importe=$request->get_text();
+            $this->log->debug("UpadateImport - Importe recibido: ".$importe);
             $importe=str_replace(',','.',$importe);
+            $this->log->debug("UpadateImport - Importe recibido (formateado): ".$importe);
             
             $cmd = new ApostarCMDVO();
             $cmd->chat_id=$request->get_chat_id();
@@ -108,6 +113,7 @@
         
         
         private function crearApuesta($endpoint, $request, $currentCMD){
+            $this->log->debug("ApostarCMD - crearApuesta");
             $grupo=$currentCMD['grupo'];
             $grupoDAO = new GrupoDAO();
             $grupoVO=$grupoDAO->select($currentCMD['grupo']);
@@ -129,8 +135,9 @@
                     "importe"=>$cmd['importe'],
                     "desc"=>$cmd['descrip']
                         );
-                $data_string = json_encode($data);                                                                                   
+                $data_string = json_encode($data);
                 
+                $this->log->debug("ApostarCMD - crearApuesta - data: " . $data_string);
                 
                 //Esto se podría meter en el utils
                 $curl = curl_init();
@@ -144,6 +151,7 @@
                 );
                                                                                                                                      
                 $result = curl_exec($curl);
+                $this->log->debug("ApostarCMD - crearApuesta - result: " . $result);
                 $apuesta = json_decode($result);
                 
                 if(isset($apuesta->error)){
