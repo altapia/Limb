@@ -98,8 +98,8 @@
 
                /**FIXME esto es un parche por el playoff */
                 if($tokenUsuario[0]['token']){
-                    if(intval($faseActual->id)==1){
-                        $url='clasificacion/'.$faseActual->id.'/2?token='.$tokenUsuario[0]['token'];
+                    if(intval($faseActual->id)==2){
+                        $url='clasificacion/1/'.$faseActual->id.'?token='.$tokenUsuario[0]['token'];
                     }else{
                         $url='clasificacion/'.$faseActual->id.'?token='.$tokenUsuario[0]['token'];
                     }
