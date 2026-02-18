@@ -79,11 +79,11 @@
             $text='*Clasificación de la últ. fase ('.$faseActual->titulo.'):*'.PHP_EOL.PHP_EOL;
 
             /**FIXME esto es un parche por el playoff */
-            /*FIXME - Si la fase es la 1, la url est clasificacion/1/2
+            /*FIXME - Si la fase es la 2, la url est clasificacion/1/2
                 Esto se obtiene de la tabla CLASIFICACION_FASE.
             */
-            if(intval($faseActual->id)==1){
-                $url='clasificacion/'.$faseActual->id.'/2';
+            if(intval($faseActual->id)==2){
+                $url='clasificacion/1/'.$faseActual->id;
             }else{
                 $url='clasificacion/'.$faseActual->id;
             }
