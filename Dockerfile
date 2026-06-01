@@ -21,7 +21,7 @@ RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf \
 
 # Configuración personalizada del sitio
 RUN echo '<Directory /var/www/html/>\n\
-    Options Indexes FollowSymLinks\n\
+    Options -Indexes +FollowSymLinks\n\
     AllowOverride All\n\
     Require all granted\n\
 </Directory>' > /etc/apache2/conf-available/limb.conf && \
