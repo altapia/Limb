@@ -274,7 +274,9 @@
                     }
 
 		    $fechaFormat= substr($fecha,8,2).'/'.substr($fecha,5,2); //.'/'.substr($fecha,0,4);
-		    $text=$text.$fechaFormat.' '.substr($valor->hora,0,5).' '.$valor->local->nombre_corto.' vs '.$valor->visitante->nombre_corto;
+		    $emojiLocal = $valor->local->emoji ? $valor->local->emoji : '';
+		    $emojiVisitante = $valor->visitante->emoji ? $valor->visitante->emoji : '';
+		    $text=$text.$fechaFormat.' '.substr($valor->hora,0,5).' '.$valor->local->nombre_corto.$emojiLocal.' vs '.$emojiVisitante.$valor->visitante->nombre_corto;
                     if($apostantes!=null){
                         $text.='=>'.$apostantes;
                     }
@@ -352,7 +354,9 @@
         
             foreach($partidos as $partido) {
                 //apuestas/partido/104
-                $text.=PHP_EOL.$emoji_star.$partido->local->nombre_corto.' vs '.$partido->visitante->nombre_corto.$emoji_star.PHP_EOL;
+                $emojiLocal = $partido->local->emoji ? $partido->local->emoji : '';
+                $emojiVisitante = $partido->visitante->emoji ? $partido->visitante->emoji : '';
+                $text.=PHP_EOL.$emoji_star.$partido->local->nombre_corto.$emojiLocal.' vs '.$emojiVisitante.$partido->visitante->nombre_corto.$emoji_star.PHP_EOL;
                 
                 $jsonApuestas = Utils::callApi($request, 'apuestas/partido/'.$partido->id.$finUrl, $urlApi);
                 $apuestas = json_decode($jsonApuestas);
@@ -546,7 +550,9 @@
                 }
                 
                 if(sizeof($arrApostantes)>0){
-                     $text.=' *'.$partido->local->nombre_corto.' vs '.$partido->visitante->nombre_corto.'* '.substr($partido->hora,0,5).PHP_EOL;
+                    $emojiLocal = $partido->local->emoji ? $partido->local->emoji : '';
+                    $emojiVisitante = $partido->visitante->emoji ? $partido->visitante->emoji : '';
+                     $text.=' *'.$partido->local->nombre_corto.$emojiLocal.' vs '.$emojiVisitante.$partido->visitante->nombre_corto.'* '.substr($partido->hora,0,5).PHP_EOL;
                     $insultar=true;
                     foreach($arrApostantes as $apost){  
                         $text.=$emoji_pointing.$apost->nombre . PHP_EOL;
@@ -629,7 +635,9 @@
                         $text.=PHP_EOL.'`      '.$fecha.' `'.PHP_EOL;
                         $fechaaux=$fecha;
                     }
-                    $text.='*'.substr($part->hora,0,5).': '.$part->local->nombre_corto.' vs '.$part->visitante->nombre_corto.'*'.PHP_EOL;
+                    $emojiLocal = $part->local->emoji ? $part->local->emoji : '';
+                    $emojiVisitante = $part->visitante->emoji ? $part->visitante->emoji : '';
+                    $text.='*'.substr($part->hora,0,5).': '.$part->local->nombre_corto.$emojiLocal.' vs '.$emojiVisitante.$part->visitante->nombre_corto.'*'.PHP_EOL;
                     
                     
                     /*Se obtienen las apuestas*/
@@ -721,8 +729,10 @@
                         $text.='*'.$fecha.'*'.PHP_EOL;
                         $fechaaux=$fecha;
                     }
-                    $text.='*     '.substr($part->hora,0,5).': *'.$part->local->nombre_corto.' vs '.$part->visitante->nombre_corto.PHP_EOL;
-                    array_push($arr, [$part->id.' | '.substr($part->hora,0,5).': '.$part->local->nombre_corto.' vs '.$part->visitante->nombre_corto]);
+                    $emojiLocal = $part->local->emoji ? $part->local->emoji : '';
+                    $emojiVisitante = $part->visitante->emoji ? $part->visitante->emoji : '';
+                    $text.='*     '.substr($part->hora,0,5).': *'.$part->local->nombre_corto.$emojiLocal.' vs '.$emojiVisitante.$part->visitante->nombre_corto.PHP_EOL;
+                    array_push($arr, [$part->id.' | '.substr($part->hora,0,5).': '.$part->local->nombre_corto.$emojiLocal.' vs '.$emojiVisitante.$part->visitante->nombre_corto]);
                 }
                 
                 if(count($arr)==0){
@@ -821,7 +831,9 @@
                     }
                     $idx++;
                 }
-                $text=$text.substr($valor->hora,0,5).' '.$valor->local->nombre_corto.' vs '.$valor->visitante->nombre_corto;
+                $emojiLocal = $valor->local->emoji ? $valor->local->emoji : '';
+                $emojiVisitante = $valor->visitante->emoji ? $valor->visitante->emoji : '';
+                $text=$text.substr($valor->hora,0,5).' '.$valor->local->nombre_corto.$emojiLocal.' vs '.$emojiVisitante.$valor->visitante->nombre_corto;
                 if($apostantes!=null){
                     $text.='=>'.$apostantes;   
                 }
