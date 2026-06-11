@@ -523,6 +523,21 @@
             $jsonPartidos = Utils::callApi($request, 'partidos/fecha/'.$fecha->fecha, $urlApi);
             $partidos = json_decode($jsonPartidos);
 
+            //Partidos del día siguiente con hora anterior a las 12:00
+            $fechaSiguiente = date('Y-m-d', strtotime($fecha->fecha . ' +1 day'));
+            $jsonPartidosSiguiente = Utils::callApi($request, 'partidos/fecha/'.$fechaSiguiente, $urlApi);
+            $partidosSiguiente = json_decode($jsonPartidosSiguiente);
+            if (!is_array($partidos)) {
+                $partidos = [];
+            }
+            if (is_array($partidosSiguiente)) {
+                foreach ($partidosSiguiente as $partidoSig) {
+                    if ((int)substr($partidoSig->hora, 0, 2) < 12) {
+                        $partidos[] = $partidoSig;
+                    }
+                }
+            }
+
             //$text='*Faltan por apostar:*'.PHP_EOL;
             setlocale(LC_ALL,"es_ES");
             $text =  '*'.strftime("%d %b",strtotime($fecha->fecha)).' - Faltan por apostar:*'.PHP_EOL.PHP_EOL;
