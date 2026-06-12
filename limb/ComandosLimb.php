@@ -258,7 +258,7 @@
             $emoji_r_arrow= Utils::convert_emoji(0x27A1);
 
             $auxFecha='';
-            setlocale(LC_ALL,"es_ES");
+            
             foreach($obj as $valor) {
 		        if($fecha!=$valor->fecha){
                     $text=$text.PHP_EOL;
@@ -280,6 +280,7 @@
 
 		        $fechaFormat= substr($fecha,8,2).'/'.substr($fecha,5,2); //.'/'.substr($fecha,0,4);
                 
+                setlocale(LC_ALL,"es_ES");
                 $diaSemana = strftime("%A",strtotime($fecha));
 		        $emojiLocal = $valor->local->emoji ? $valor->local->emoji : '';
 		        $emojiVisitante = $valor->visitante->emoji ? $valor->visitante->emoji : '';
