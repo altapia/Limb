@@ -253,33 +253,46 @@
 
             $text='';
             $fecha='';
+            $emoji_calendar= Utils::convert_emoji(0x1F4C5);
+            $emoji_reloj= Utils::convert_emoji(0x1F550);
+            $emoji_r_arrow= Utils::convert_emoji(0x27A1);
 
+            $auxFecha='';
+            setlocale(LC_ALL,"es_ES");
             foreach($obj as $valor) {
-		    if($fecha!=$valor->fecha){
-                        $text=$text.PHP_EOL;
-                    }
-	            $fecha=$valor->fecha;
+		        if($fecha!=$valor->fecha){
                     $text=$text.PHP_EOL;
-                    $idPartido=$valor->id;
-                    //Apostantes
-                    $apostantes='';
-                    $idx = 0;
-                    foreach($valor->usuarios as $usu) {
-                        if($idx>0){
-                            $apostantes.=', '.$usu->nombre;
-                        }else{
-                            $apostantes.=$usu->nombre;
-                        }
-                        $idx++;
+                }
+	            $fecha=$valor->fecha;
+                $text=$text.PHP_EOL;
+                
+                //Apostantes
+                $apostantes='';
+                $idx = 0;
+                foreach($valor->usuarios as $usu) {
+                    if($idx>0){
+                        $apostantes.=', '.$usu->nombre;
+                    }else{
+                        $apostantes.=$usu->nombre;
                     }
+                    $idx++;
+                }
 
-		    $fechaFormat= substr($fecha,8,2).'/'.substr($fecha,5,2); //.'/'.substr($fecha,0,4);
-		    $emojiLocal = $valor->local->emoji ? $valor->local->emoji : '';
-		    $emojiVisitante = $valor->visitante->emoji ? $valor->visitante->emoji : '';
-		    $text=$text.$fechaFormat.' '.substr($valor->hora,0,5).' '.$valor->local->nombre_corto.$emojiLocal.' vs '.$emojiVisitante.$valor->visitante->nombre_corto;
-                    if($apostantes!=null){
-                        $text.='=>'.$apostantes;
-                    }
+		        $fechaFormat= substr($fecha,8,2).'/'.substr($fecha,5,2); //.'/'.substr($fecha,0,4);
+                
+                $diaSemana = strftime("%A",strtotime($fecha));
+		        $emojiLocal = $valor->local->emoji ? $valor->local->emoji : '';
+		        $emojiVisitante = $valor->visitante->emoji ? $valor->visitante->emoji : '';
+
+                if($auxFecha!=$fecha){
+                    $text=$text.$emoji_calendar.$fechaFormat.' ('.$diaSemana.')'.PHP_EOL;
+                    $auxFecha=$fecha;
+                }
+		        $text=$text.' '.$emoji_reloj.substr($valor->hora,0,5).' | '.$valor->local->nombre_corto.$emojiLocal.' vs '.$emojiVisitante.$valor->visitante->nombre_corto;
+                
+                if($apostantes!=null){
+                    $text.=' '.$emoji_r_arrow.' '.$apostantes;
+                }
             }
 
             if($fecha==null){
