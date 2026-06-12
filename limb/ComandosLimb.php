@@ -902,7 +902,7 @@
                     $finUrl='?token='.$tokenUsuario[0]['token'];
                     $json = Utils::callApi($request, 'apuestas/sincuota'.$finUrl, $urlApi);
                     $sinCuota = json_decode($json);
-                    if(property_exists($sinCuota, 'error')){
+                    if(is_object($sinCuota) && property_exists($sinCuota, 'error')){
                         $text = 'Esto solo lo puede usar un admin, tonto';
                     }else{
                         $emoji_guion= Utils::convert_emoji(0x2796);
