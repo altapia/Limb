@@ -81,13 +81,16 @@
             /**FIXME esto es un parche por el playoff */
             /*FIXME - Si la fase es la 2, la url est clasificacion/1/2
                 Esto se obtiene de la tabla CLASIFICACION_FASE.
-            */
+            
             if(intval($faseActual->id)==2){
                 $url='clasificacion/1/'.$faseActual->id;
             }else{
                 $url='clasificacion/'.$faseActual->id;
             }
+			*/
 
+			 $url='clasificacion/'.$faseActual->id;
+			
             //Se comprueba si es un chat privado, para obtener el token del usuario
             if($request->is_private_chat()){
                 $jsonTokenUser = Utils::callApi($request, 'tokenusuario/'.$request->get_chat_id().'?token='.TOKEN_API_BOT, $urlApi);
