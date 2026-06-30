@@ -99,13 +99,17 @@
                 //Si hay token de usuario del chat, se invoca el comando con el token
                // $objeto = $tokenUsuario[0];
 
-               /**FIXME esto es un parche por el playoff */
+               
                 if($tokenUsuario[0]['token']){
+					/**FIXME esto es un parche por el playoff
                     if(intval($faseActual->id)==2){
                         $url='clasificacion/1/'.$faseActual->id.'?token='.$tokenUsuario[0]['token'];
                     }else{
                         $url='clasificacion/'.$faseActual->id.'?token='.$tokenUsuario[0]['token'];
                     }
+					*/
+
+					$url='clasificacion/'.$faseActual->id.'?token='.$tokenUsuario[0]['token'];
                    
                 }
             }
