@@ -328,7 +328,7 @@
             $response->send();
         
             //Se obtiene la fecha del proximo partido
-            $jsonFecha = Utils::callApi($request, 'util/fechaProxPartido/', $urlApi);
+            $jsonFecha = Utils::callApi($request, 'util/fechaProxPartido', $urlApi);
             $fecha = json_decode($jsonFecha);
             
             
@@ -339,7 +339,7 @@
 
             if(sizeof($partidos)==0){
                 //Se obtiene la fecha del proximo partido
-                $jsonFecha = Utils::callApi($request, 'util/fechaProxPartido/', $urlApi);
+                $jsonFecha = Utils::callApi($request, 'util/fechaProxPartido', $urlApi);
                 $fecha = json_decode($jsonFecha);
                 $jsonPartidos = Utils::callApi($request, 'partidos/fecha/'.$fecha->fecha, $urlApi);
                 $partidos = json_decode($jsonPartidos);
@@ -537,7 +537,7 @@
             $max_apostable = floatval($faseActual->importe);
             
             //Se obtiene la fecha del proximo partido
-            $jsonFecha = Utils::callApi($request, 'util/fechaProxPartido/', $urlApi);
+            $jsonFecha = Utils::callApi($request, 'util/fechaProxPartido', $urlApi);
             $fecha = json_decode($jsonFecha);
             
             //Partidos de esa fecha
