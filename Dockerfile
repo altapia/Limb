@@ -1,5 +1,5 @@
-# Usar imagen oficial de PHP con Apache (versión 7.4)
-FROM php:7.4-apache
+# Usar imagen oficial de PHP con Apache (versión 8.5)
+FROM php:8.5-apache
 
 # Instalar dependencias del sistema y extensiones de PHP
 RUN apt-get update && apt-get install -y \

@@ -50,12 +50,14 @@
                     $json = Utils::callApi($request, $url, $urlApi);
                     $obj = json_decode($json);
         
-                    if(sizeof($obj)>0 && property_exists($obj[0],'error')){
-			return -1;
+                    if(is_array($obj) && sizeof($obj)>0 && isset($obj[0]) && property_exists($obj[0],'error')){
+                        return -1;
                         $response = new Response($endpoint, $request->get_chat_id(), Response::TYPE_TEXT);
                         $response->text=$obj[0]->error->text;
                         $response->markdown=true;
                         return $response;
+                    } elseif(is_object($obj) && property_exists($obj,'error')){
+                        return -1;
                     }
                     
                     $jsonTokenUser = Utils::callApi($request, 'tokenusuario/'.$request->get_chat_id().'?token='.TOKEN_API_BOT, $urlApi);

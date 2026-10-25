@@ -213,7 +213,7 @@
                 return $result;
             
             } catch (Exception $e) {
-                syslog(LOG_ERR, '[' . getmypid() . '] ERROR Exception al enviar el mensaje: ' . $e–>getMessage());
+                syslog(LOG_ERR, '[' . getmypid() . '] ERROR Exception al enviar el mensaje: ' . $e->getMessage());
             }
             
         }

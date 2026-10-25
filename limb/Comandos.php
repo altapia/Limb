@@ -50,27 +50,27 @@
                 $currentCMDDAO = new CurrentCMDDAO();
                 $currentCMD = $currentCMDDAO->select($request->get_chat_id());
                 
-                if($currentCMD['grupo']==null){
+                if(is_array($currentCMD) && isset($currentCMD['grupo']) && $currentCMD['grupo']==null){
                     $grupoDAO = new GrupoDAO();
                     $grupoVO=$grupoDAO->selectByNombre($request->get_text());
                     if($grupoVO!=null){
                         $currentCMDDAO->updateGrupo($request->get_chat_id(), $grupoVO->id);
                     
-                        $func = $currentCMD['cmd'];
+                        $func = isset($currentCMD['cmd']) ? $currentCMD['cmd'] : null;
                         return $response = ComandosLimb::ejecutar($func,$endpoint, $request );
                     } 
                 }
                 
-                if($currentCMD!=null){
-                    $logStatic->debug("Hay un comando en marcha: ".$currentCMD['cmd']);
+                if(is_array($currentCMD) && $currentCMD!=null){
+                    $logStatic->debug("Hay un comando en marcha: ".(isset($currentCMD['cmd']) ? $currentCMD['cmd'] : ''));
                     
-                    if($currentCMD['cmd']=='apostar'){
+                    if(isset($currentCMD['cmd']) && $currentCMD['cmd']=='apostar'){
                         $apostarCMD = new ApostarCMD();
                         return $apostarCMD->apostar($endpoint, $request, $currentCMD );
                     }else{
                         $grupoDAO = new GrupoDAO();
                         $grupoVO=$grupoDAO->selectByNombre($request->get_text());
-                        if($grupoVO!=null){
+                        if($grupoVO!=null && isset($currentCMD['cmd'])){
                             $currentCMDDAO->updateGrupo($request->get_chat_id(), $grupoVO->id);
                         
                             $func = $currentCMD['cmd'];

@@ -161,7 +161,7 @@
             
             $this->from_id=$message["from_id"];
             $this->is_chat_private=false;
-            $this->chat_type=='public'; // es public
+            $this->chat_type = 'public'; // es public
             
             $this->message_type=self::TYPE_TEXT;
             $this->message_type_desc='texto';

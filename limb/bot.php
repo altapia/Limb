@@ -43,7 +43,7 @@ $log->debug("Comienza la ejecución");
 
 $telegramAPI = !isset($_POST["token"]) || $_POST["token"]!=$TOKEN;
 $rawMsg = $telegramAPI ? file_get_contents('php://input') : $_POST;
-$log->debug("Mensaje: ".$telegramAPI ? $rawMsg : print_r($rawMsg, true));
+$log->debug("Mensaje: " . ($telegramAPI ? $rawMsg : print_r($rawMsg, true)));
 
 try{
     //Se procesa el mensaje recibido
@@ -66,11 +66,15 @@ if($request->get_message_type()==Request::TYPE_TEXT){
         $resultado = $response->send();
 
         $result = json_decode($resultado, true);
-	    $log->info($resultado);
-        if($result["ok"]){
+        $log->info($resultado);
+        if(is_array($result) && isset($result["ok"]) && $result["ok"]){
             $log->info('Respuesta enviada correctamente');
+        }elseif(is_array($result)){
+            $error_code = isset($result["error_code"]) ? $result["error_code"] : 'unknown';
+            $description = isset($result["description"]) ? $result["description"] : 'unknown';
+            $log->error('Error al enviar la respuesta. ErroCode: '.$error_code . '. description: '.$description);
         }else{
-            $log->error('Error al enviar la respuesta. ErroCode: '.$result["error_code"] . '. description: '.$result["description"]);
+            $log->error('Error al enviar la respuesta. Respuesta no válida.');
         }
     }else{
         $log->error('Error al ejecutar el comando. '.$request->to_string());
@@ -84,10 +88,14 @@ if($request->get_message_type()==Request::TYPE_TEXT){
         $resultado = $response->send();
 
         $result = json_decode($resultado, true);
-        if($result["ok"]){
+        if(is_array($result) && isset($result["ok"]) && $result["ok"]){
             $log->info('Respuesta enviada correctamente');
+        }elseif(is_array($result)){
+            $error_code = isset($result["error_code"]) ? $result["error_code"] : 'unknown';
+            $description = isset($result["description"]) ? $result["description"] : 'unknown';
+            $log->error('Error al enviar la respuesta. ErroCode: '.$error_code . '. description: '.$description);
         }else{
-            $log->error('Error al enviar la respuesta. ErroCode: '.$result["error_code"] . '. description: '.$result["description"]);
+            $log->error('Error al enviar la respuesta. Respuesta no válida.');
         }
         
     }else{
